@@ -1,0 +1,15 @@
+{
+  "overall": 85,
+  "readability": "high",
+  "notes": "DEV MODE — mock assessment. Diagram shows a clear health insurance policy lifecycle with well-defined swimlanes, readable step labels, and unambiguous flow arrows throughout. Minor density in the amendment/renewal section.",
+  "unclear_elements": [],
+  "steps": [
+    {"source_ref": "6.2.3.1",   "name": "Change Policy Information",          "type": "task"},
+    {"source_ref": "6.2.3.1.1", "name": "Add a person to a policy",           "type": "subprocess"},
+    {"source_ref": "6.2.3.1.2", "name": "Remove a person from a policy",      "type": "subprocess"},
+    {"source_ref": "6.2.3.1.3", "name": "Change member details",              "type": "subprocess"},
+    {"source_ref": "6.2.3.1.4", "name": "Update payment method",              "type": "subprocess"},
+    {"source_ref": "6.2.3.2",   "name": "Validate policy change",             "type": "task"},
+    {"source_ref": "6.2.3.3",   "name": "Notify member of changes",           "type": "task"}
+  ]
+}

@@ -1,0 +1,177 @@
+{
+  "process_name": "Health Insurance Policy Lifecycle",
+  "lanes": ["Customer", "Agent", "Underwriting", "Policy Administration"],
+  "steps": [
+    {
+      "id": "step_1",
+      "type": "event",
+      "name": "Request Quote",
+      "source_ref": null,
+      "lane": "Customer",
+      "sequence": ["step_2"]
+    },
+    {
+      "id": "step_2",
+      "type": "task",
+      "name": "Capture Customer Details",
+      "source_ref": "1.1",
+      "lane": "Agent",
+      "sequence": ["step_3"]
+    },
+    {
+      "id": "step_3",
+      "type": "task",
+      "name": "Assess Risk Profile",
+      "source_ref": "1.2",
+      "lane": "Underwriting",
+      "sequence": ["step_4"]
+    },
+    {
+      "id": "step_4",
+      "type": "gateway",
+      "name": "Eligible for Cover?",
+      "source_ref": null,
+      "lane": "Underwriting",
+      "sequence": ["step_5", "step_6"]
+    },
+    {
+      "id": "step_5",
+      "type": "task",
+      "name": "Generate Quote",
+      "source_ref": "1.3",
+      "lane": "Agent",
+      "sequence": ["step_7"]
+    },
+    {
+      "id": "step_6",
+      "type": "task",
+      "name": "Notify Customer — Not Eligible",
+      "source_ref": "1.4",
+      "lane": "Agent",
+      "sequence": ["step_16"]
+    },
+    {
+      "id": "step_7",
+      "type": "task",
+      "name": "Review and Accept Quote",
+      "source_ref": "2.1",
+      "lane": "Customer",
+      "sequence": ["step_8"]
+    },
+    {
+      "id": "step_8",
+      "type": "gateway",
+      "name": "Quote Accepted?",
+      "source_ref": null,
+      "lane": "Customer",
+      "sequence": ["step_9", "step_17"]
+    },
+    {
+      "id": "step_9",
+      "type": "task",
+      "name": "Bind Policy",
+      "source_ref": "2.2",
+      "lane": "Policy Administration",
+      "sequence": ["step_10"]
+    },
+    {
+      "id": "step_10",
+      "type": "task",
+      "name": "Issue Policy Documents",
+      "source_ref": "2.3",
+      "lane": "Policy Administration",
+      "sequence": ["step_11"]
+    },
+    {
+      "id": "step_11",
+      "type": "task",
+      "name": "Set Up Direct Debit",
+      "source_ref": "2.4",
+      "lane": "Customer",
+      "sequence": ["step_12"]
+    },
+    {
+      "id": "step_12",
+      "type": "gateway",
+      "name": "Policy Event?",
+      "source_ref": null,
+      "lane": "Policy Administration",
+      "sequence": ["step_13", "step_14", "step_15"]
+    },
+    {
+      "id": "step_13",
+      "type": "subprocess",
+      "subtype": "child_case",
+      "name": "Amend Policy",
+      "source_ref": "3.1",
+      "lane": "Policy Administration",
+      "sequence": ["step_12"]
+    },
+    {
+      "id": "step_14",
+      "type": "subprocess",
+      "subtype": "child_case",
+      "name": "Renew Policy",
+      "source_ref": "3.2",
+      "lane": "Policy Administration",
+      "sequence": ["step_12"]
+    },
+    {
+      "id": "step_15",
+      "type": "task",
+      "name": "Cancel Policy",
+      "source_ref": "3.3",
+      "lane": "Policy Administration",
+      "sequence": ["step_16"]
+    },
+    {
+      "id": "step_16",
+      "type": "event",
+      "name": "Policy Closed",
+      "source_ref": null,
+      "lane": "Policy Administration",
+      "sequence": []
+    },
+    {
+      "id": "step_17",
+      "type": "event",
+      "name": "Quote Declined — End",
+      "source_ref": null,
+      "lane": "Customer",
+      "sequence": []
+    }
+  ],
+  "data_entities": [
+    "CustomerProfile",
+    "PolicyRecord",
+    "QuoteDocument",
+    "CoverDetails",
+    "DirectDebitMandate",
+    "ClaimsHistory",
+    "RiskAssessment"
+  ],
+  "integrations": [
+    "Credit Reference Bureau API",
+    "Medical History Provider",
+    "Payment Gateway",
+    "Document Management System",
+    "Policy Administration System"
+  ],
+  "decisions": [
+    {
+      "id": "step_4",
+      "question": "Eligible for Cover?",
+      "outcomes": ["Yes — Proceed to Quote", "No — Decline"]
+    },
+    {
+      "id": "step_8",
+      "question": "Quote Accepted?",
+      "outcomes": ["Accepted — Bind Policy", "Declined — End"]
+    },
+    {
+      "id": "step_12",
+      "question": "Policy Event?",
+      "outcomes": ["Amendment Required", "Renewal Due", "Cancellation Requested"]
+    }
+  ]
+}

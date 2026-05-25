@@ -1,0 +1,250 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL"
+             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+             xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI"
+             xmlns:dc="http://www.omg.org/spec/DD/20100524/DC"
+             xmlns:di="http://www.omg.org/spec/DD/20100524/DI"
+             id="definitions_1"
+             targetNamespace="http://bupa.com.au/bpmn/1"
+             name="6.2.3.1.1 Process a change of cover (Current state architecture) - Organizational Process Diagram">
+
+  <collaboration id="collab_1">
+    <participant id="pool_1" name="Customer" processRef="proc_1"/>
+    <participant id="pool_2" name="HI Partnership Solutions Consultant R" processRef="proc_2"/>
+    <participant id="pool_3" name="Customer R" processRef="proc_3"/>
+    <participant id="pool_4" name="Employer/Group" processRef="proc_4"/>
+    <messageFlow id="mf_1" sourceRef="step_12" targetRef="step_16"/>
+  </collaboration>
+
+  <!-- CUSTOMER -->
+  <process id="proc_1" name="Customer" isExecutable="true">
+    <startEvent id="step_1" name="Start"/>
+    <task id="step_2" name="View customer details &amp; conduct privacy check"/>
+    <exclusiveGateway id="step_3" name="Does a person need to be removed?"/>
+    <callActivity id="step_4" name="6.2.2.9 Remove a person from a policy" calledElement="proc_6_2_2_9_Remove_a_person_from_a_policy"/>
+    <task id="step_5" name="Determine recommended product based on needs, features and benefits"/>
+    <task id="step_6" name="Begin change of cover quote"/>
+    <exclusiveGateway id="step_7" name="Is it corporate group?"/>
+    <task id="step_8" name="Input AOG"/>
+    <task id="step_9" name="Generate quote"/>
+    <exclusiveGateway id="step_10" name="Can consultant apply cover change to corporate group?"/>
+    <exclusiveGateway id="step_11" name="Is the customer proceeding?"/>
+    <task id="step_12" name="Notify partner services of change of cover enquiry"/>
+    <task id="step_13" name="Fulfil change of cover quote &amp; end interaction with customer"/>
+    <task id="step_14" name="Advise customers to complete and sign Change of cover form"/>
+    <endEvent id="step_15" name="End"/>
+    <endEvent id="step_17" name="End - 6.2.3.2.7 Manage Cyclops note, alert, or flag"/>
+    <exclusiveGateway id="step_18" name="Is this application being completed in a Retail Store?"/>
+    <task id="step_20" name="Process change of cover"/>
+    <task id="step_21" name="Provide declaration (if required)"/>
+    <task id="step_23" name="Notes added"/>
+    <task id="step_24" name="Process change of cover"/>
+    <task id="step_27" name="Automatic note generated once the change of cove is done"/>
+    <exclusiveGateway id="step_29" name="Does a dependant need to be added to the policy?"/>
+    <callActivity id="step_32" name="6.2.2.1 Add a person to a policy" calledElement="proc_6_2_2_1_Add_a_person_to_a_policy"/>
+    <exclusiveGateway id="step_33" name="Do dependent details need to be updated?"/>
+    <exclusiveGateway id="step_35" name="Do dependent details need to be updated?"/>
+    <callActivity id="step_36" name="6.2.2.2 Manage study details" calledElement="proc_6_2_2_2_Manage_study_details"/>
+    <exclusiveGateway id="step_37" name="Do card details need to be updated?"/>
+    <exclusiveGateway id="step_38" name="Do card details need to be updated?"/>
+    <callActivity id="step_39" name="6.2.2.3 Manage Medicare, concession or loyalty card details" calledElement="proc_6_2_2_3_Manage_Medicare__concession_or_l"/>
+    <exclusiveGateway id="step_40" name="Does a special offer need to be applied?"/>
+    <exclusiveGateway id="step_41" name="Does a special offer need to be applied?"/>
+    <callActivity id="step_42" name="6.2.3.2.3 Maintain policy special offers" calledElement="proc_6_2_3_2_3_Maintain_policy_special_offers"/>
+    <exclusiveGateway id="step_43" name="Do comms preferences need to be updated?"/>
+    <exclusiveGateway id="step_44" name="Do comms preferences need to be updated?"/>
+    <callActivity id="step_45" name="6.2.2.4 Manage communication preferences" calledElement="proc_6_2_2_4_Manage_communication_preferences"/>
+    <exclusiveGateway id="step_46" name="Does rebate need to be keyed?"/>
+    <exclusiveGateway id="step_47" name="Does rebate need to be keyed?"/>
+    <callActivity id="step_48" name="6.2.4.1.1 Process or maintain a rebate registration" calledElement="proc_6_2_4_1_1_Process_or_maintain_a_rebate_r"/>
+    <exclusiveGateway id="step_49" name="Does portability need to be keyed?"/>
+    <callActivity id="step_50" name="6.2.4.1.2 Maintain rebate ties selection" calledElement="proc_6_2_4_1_2_Maintain_rebate_ties_selection"/>
+    <exclusiveGateway id="step_51" name="Type of portability?"/>
+    <exclusiveGateway id="step_52" name="Does LHC need to be keyed?"/>
+    <task id="step_53" name="Add previous fund/person to a policy request screen"/>
+    <callActivity id="step_54" name="6.2.4.2.4 Maintain portability" calledElement="proc_6_2_4_2_4_Maintain_portability"/>
+    <callActivity id="step_55" name="6.2.4.2.5 Add, maintain or revoke Health Cover LHC loading" calledElement="proc_6_2_4_2_5_Add__maintain_or_revoke_Health"/>
+    <exclusiveGateway id="step_56" name="Does ABD need to be keyed?"/>
+    <endEvent id="step_57" name="End"/>
+    <exclusiveGateway id="step_58" name="Does LHC need to be keyed?"/>
+    <exclusiveGateway id="step_59" name="Does ABD need to be keyed?"/>
+    <callActivity id="step_60" name="5.2.4.6 Add, maintain or revoke Age-Based Discount (ABD)" calledElement="proc_5_2_4_6_Add__maintain_or_revoke_Age-Base"/>
+    <task id="step_61" name="Generate change of cover fulfilment"/>
+    <task id="step_62" name="Generate change of cover fulfilment"/>
+    <exclusiveGateway id="step_63" name="Will this change the premiums?"/>
+    <exclusiveGateway id="step_64" name="Type of payment method?"/>
+    <exclusiveGateway id="step_65" name="Is a new visa letter required?"/>
+    <endEvent id="step_66" name="End - Bupa employee"/>
+    <endEvent id="step_67" name="End - Company paid"/>
+    <endEvent id="step_68" name="End - Split bill"/>
+    <task id="step_69" name="Payment Deduction Scheme - Generate letter to paymaster advising of premium change"/>
+    <task id="step_70" name="Agent branch - Generate new service notice to Clearance agent"/>
+    <callActivity id="step_71" name="4.3.1.5.2 Request visa letter" calledElement="proc_4_3_1_5_2_Request_visa_letter"/>
+    <exclusiveGateway id="step_72" name="Is this being completed in a retail store?"/>
+    <endEvent id="step_73" name="End"/>
+    <task id="step_74" name="Direct Debit - Adjust payment dates"/>
+    <exclusiveGateway id="step_75" name="Is this being completed in a retail store?"/>
+    <task id="step_76" name="Ensure to handle paperwork securely"/>
+    <endEvent id="step_77" name="End"/>
+    <exclusiveGateway id="step_78" name="Is recalculation required?"/>
+    <callActivity id="step_79" name="5.4.0.2.2.3 Manage patient contact details &amp; consents / 6.2.2.1 Receive and distribute service request" calledElement="proc_5_4_0_2_2_3_Manage_patient_contact_detai"/>
+    <callActivity id="step_80" name="6.2.5.1.2 Manage a one off payment" calledElement="proc_6_2_5_1_2_Manage_a_one_off_payment"/>
+    <endEvent id="step_81" name="End"/>
+    <endEvent id="step_82" name="End"/>
+    <endEvent id="step_83" name="End"/>
+    <sequenceFlow id="sf_proc_1_1" sourceRef="step_1" targetRef="step_2"/>
+    <sequenceFlow id="sf_proc_1_2" sourceRef="step_2" targetRef="step_3"/>
+    <sequenceFlow id="sf_proc_1_3" sourceRef="step_3" targetRef="step_4" name="Yes"/>
+    <sequenceFlow id="sf_proc_1_4" sourceRef="step_3" targetRef="step_5" name="No"/>
+    <sequenceFlow id="sf_proc_1_5" sourceRef="step_4" targetRef="step_6"/>
+    <sequenceFlow id="sf_proc_1_6" sourceRef="step_5" targetRef="step_6"/>
+    <sequenceFlow id="sf_proc_1_7" sourceRef="step_6" targetRef="step_7"/>
+    <sequenceFlow id="sf_proc_1_8" sourceRef="step_7" targetRef="step_8" name="Yes"/>
+    <sequenceFlow id="sf_proc_1_9" sourceRef="step_7" targetRef="step_9" name="No"/>
+    <sequenceFlow id="sf_proc_1_10" sourceRef="step_8" targetRef="step_10"/>
+    <sequenceFlow id="sf_proc_1_11" sourceRef="step_9" targetRef="step_11"/>
+    <sequenceFlow id="sf_proc_1_12" sourceRef="step_10" targetRef="step_12" name="Yes"/>
+    <sequenceFlow id="sf_proc_1_13" sourceRef="step_10" targetRef="step_13" name="No"/>
+    <sequenceFlow id="sf_proc_1_14" sourceRef="step_11" targetRef="step_14" name="Yes"/>
+    <sequenceFlow id="sf_proc_1_15" sourceRef="step_11" targetRef="step_15" name="No"/>
+    <sequenceFlow id="sf_proc_1_16" sourceRef="step_13" targetRef="step_17"/>
+    <sequenceFlow id="sf_proc_1_17" sourceRef="step_14" targetRef="step_18"/>
+    <sequenceFlow id="sf_proc_1_18" sourceRef="step_18" targetRef="step_20" name="Yes"/>
+    <sequenceFlow id="sf_proc_1_19" sourceRef="step_18" targetRef="step_21" name="No"/>
+    <sequenceFlow id="sf_proc_1_20" sourceRef="step_20" targetRef="step_23"/>
+    <sequenceFlow id="sf_proc_1_21" sourceRef="step_21" targetRef="step_24"/>
+    <sequenceFlow id="sf_proc_1_22" sourceRef="step_23" targetRef="step_27"/>
+    <sequenceFlow id="sf_proc_1_23" sourceRef="step_24" targetRef="step_23"/>
+    <sequenceFlow id="sf_proc_1_24" sourceRef="step_27" targetRef="step_29"/>
+    <sequenceFlow id="sf_proc_1_25" sourceRef="step_29" targetRef="step_32" name="Yes"/>
+    <sequenceFlow id="sf_proc_1_26" sourceRef="step_29" targetRef="step_33" name="No"/>
+    <sequenceFlow id="sf_proc_1_27" sourceRef="step_32" targetRef="step_35"/>
+    <sequenceFlow id="sf_proc_1_28" sourceRef="step_33" targetRef="step_36" name="Yes"/>
+    <sequenceFlow id="sf_proc_1_29" sourceRef="step_33" targetRef="step_37" name="No"/>
+    <sequenceFlow id="sf_proc_1_30" sourceRef="step_35" targetRef="step_36" name="Yes"/>
+    <sequenceFlow id="sf_proc_1_31" sourceRef="step_35" targetRef="step_37" name="No"/>
+    <sequenceFlow id="sf_proc_1_32" sourceRef="step_36" targetRef="step_38"/>
+    <sequenceFlow id="sf_proc_1_33" sourceRef="step_37" targetRef="step_39" name="Yes"/>
+    <sequenceFlow id="sf_proc_1_34" sourceRef="step_37" targetRef="step_40" name="No"/>
+    <sequenceFlow id="sf_proc_1_35" sourceRef="step_38" targetRef="step_39" name="Yes"/>
+    <sequenceFlow id="sf_proc_1_36" sourceRef="step_38" targetRef="step_40" name="No"/>
+    <sequenceFlow id="sf_proc_1_37" sourceRef="step_39" targetRef="step_41"/>
+    <sequenceFlow id="sf_proc_1_38" sourceRef="step_40" targetRef="step_42" name="Yes"/>
+    <sequenceFlow id="sf_proc_1_39" sourceRef="step_40" targetRef="step_43" name="No"/>
+    <sequenceFlow id="sf_proc_1_40" sourceRef="step_41" targetRef="step_42" name="Yes"/>
+    <sequenceFlow id="sf_proc_1_41" sourceRef="step_41" targetRef="step_43" name="No"/>
+    <sequenceFlow id="sf_proc_1_42" sourceRef="step_42" targetRef="step_44"/>
+    <sequenceFlow id="sf_proc_1_43" sourceRef="step_43" targetRef="step_45" name="Yes"/>
+    <sequenceFlow id="sf_proc_1_44" sourceRef="step_43" targetRef="step_46" name="No"/>
+    <sequenceFlow id="sf_proc_1_45" sourceRef="step_44" targetRef="step_45" name="Yes"/>
+    <sequenceFlow id="sf_proc_1_46" sourceRef="step_44" targetRef="step_46" name="No"/>
+    <sequenceFlow id="sf_proc_1_47" sourceRef="step_45" targetRef="step_47"/>
+    <sequenceFlow id="sf_proc_1_48" sourceRef="step_46" targetRef="step_48" name="Yes"/>
+    <sequenceFlow id="sf_proc_1_49" sourceRef="step_46" targetRef="step_49" name="No"/>
+    <sequenceFlow id="sf_proc_1_50" sourceRef="step_47" targetRef="step_48" name="Yes"/>
+    <sequenceFlow id="sf_proc_1_51" sourceRef="step_47" targetRef="step_49" name="No"/>
+    <sequenceFlow id="sf_proc_1_52" sourceRef="step_48" targetRef="step_50"/>
+    <sequenceFlow id="sf_proc_1_53" sourceRef="step_49" targetRef="step_51" name="Yes"/>
+    <sequenceFlow id="sf_proc_1_54" sourceRef="step_49" targetRef="step_52" name="No"/>
+    <sequenceFlow id="sf_proc_1_55" sourceRef="step_50" targetRef="step_49"/>
+    <sequenceFlow id="sf_proc_1_56" sourceRef="step_51" targetRef="step_53" name="External"/>
+    <sequenceFlow id="sf_proc_1_57" sourceRef="step_51" targetRef="step_54" name="Internal"/>
+    <sequenceFlow id="sf_proc_1_58" sourceRef="step_52" targetRef="step_55" name="Yes"/>
+    <sequenceFlow id="sf_proc_1_59" sourceRef="step_52" targetRef="step_56" name="No"/>
+    <sequenceFlow id="sf_proc_1_60" sourceRef="step_53" targetRef="step_57"/>
+    <sequenceFlow id="sf_proc_1_61" sourceRef="step_54" targetRef="step_58"/>
+    <sequenceFlow id="sf_proc_1_62" sourceRef="step_55" targetRef="step_59"/>
+    <sequenceFlow id="sf_proc_1_63" sourceRef="step_56" targetRef="step_60" name="Yes"/>
+    <sequenceFlow id="sf_proc_1_64" sourceRef="step_56" targetRef="step_61" name="No"/>
+    <sequenceFlow id="sf_proc_1_65" sourceRef="step_58" targetRef="step_55" name="Yes"/>
+    <sequenceFlow id="sf_proc_1_66" sourceRef="step_58" targetRef="step_56" name="No"/>
+    <sequenceFlow id="sf_proc_1_67" sourceRef="step_59" targetRef="step_60" name="Yes"/>
+    <sequenceFlow id="sf_proc_1_68" sourceRef="step_59" targetRef="step_61" name="No"/>
+    <sequenceFlow id="sf_proc_1_69" sourceRef="step_60" targetRef="step_62"/>
+    <sequenceFlow id="sf_proc_1_70" sourceRef="step_61" targetRef="step_63"/>
+    <sequenceFlow id="sf_proc_1_71" sourceRef="step_62" targetRef="step_63"/>
+    <sequenceFlow id="sf_proc_1_72" sourceRef="step_63" targetRef="step_64" name="Yes"/>
+    <sequenceFlow id="sf_proc_1_73" sourceRef="step_63" targetRef="step_65" name="No"/>
+    <sequenceFlow id="sf_proc_1_74" sourceRef="step_64" targetRef="step_66" name="Bupa employee"/>
+    <sequenceFlow id="sf_proc_1_75" sourceRef="step_64" targetRef="step_67" name="Company paid"/>
+    <sequenceFlow id="sf_proc_1_76" sourceRef="step_64" targetRef="step_68" name="Split bill"/>
+    <sequenceFlow id="sf_proc_1_77" sourceRef="step_64" targetRef="step_69" name="Payment Deduction Scheme"/>
+    <sequenceFlow id="sf_proc_1_78" sourceRef="step_64" targetRef="step_70" name="Agent branch / Direct Debit"/>
+    <sequenceFlow id="sf_proc_1_79" sourceRef="step_65" targetRef="step_71" name="Yes"/>
+    <sequenceFlow id="sf_proc_1_80" sourceRef="step_65" targetRef="step_72" name="No"/>
+    <sequenceFlow id="sf_proc_1_81" sourceRef="step_69" targetRef="step_73"/>
+    <sequenceFlow id="sf_proc_1_82" sourceRef="step_70" targetRef="step_74"/>
+    <sequenceFlow id="sf_proc_1_83" sourceRef="step_71" targetRef="step_75"/>
+    <sequenceFlow id="sf_proc_1_84" sourceRef="step_72" targetRef="step_76" name="Yes"/>
+    <sequenceFlow id="sf_proc_1_85" sourceRef="step_72" targetRef="step_77" name="No"/>
+    <sequenceFlow id="sf_proc_1_86" sourceRef="step_74" targetRef="step_78"/>
+    <sequenceFlow id="sf_proc_1_87" sourceRef="step_75" targetRef="step_76" name="Yes"/>
+    <sequenceFlow id="sf_proc_1_88" sourceRef="step_75" targetRef="step_77" name="No"/>
+    <sequenceFlow id="sf_proc_1_89" sourceRef="step_76" targetRef="step_79"/>
+    <sequenceFlow id="sf_proc_1_90" sourceRef="step_78" targetRef="step_80" name="Yes"/>
+    <sequenceFlow id="sf_proc_1_91" sourceRef="step_78" targetRef="step_81" name="No"/>
+    <sequenceFlow id="sf_proc_1_92" sourceRef="step_79" targetRef="step_82"/>
+    <sequenceFlow id="sf_proc_1_93" sourceRef="step_80" targetRef="step_83"/>
+  </process>
+
+  <!-- HI PARTNERSHIP SOLUTIONS CONSULTANT R -->
+  <process id="proc_2" name="HI Partnership Solutions Consultant R" isExecutable="false">
+    <task id="step_16" name="Receive diligious change of cover enquiry"/>
+    <task id="step_19" name="Confirm the eligibility with the group/employer"/>
+    <exclusiveGateway id="step_22" name="Travelling"/>
+    <task id="step_25" name="Process change of cover"/>
+    <endEvent id="step_26" name="Cancelled"/>
+    <exclusiveGateway id="step_28" name="Is there a catch up payment required?"/>
+    <task id="step_30" name="Inform customer about required catch up payment"/>
+    <endEvent id="step_31" name="End - 6.2.2.1 Manage Cyclops note, alert or flag"/>
+    <endEvent id="step_34" name="End"/>
+    <sequenceFlow id="sf_proc_2_1" sourceRef="step_16" targetRef="step_19"/>
+    <sequenceFlow id="sf_proc_2_2" sourceRef="step_19" targetRef="step_22"/>
+    <sequenceFlow id="sf_proc_2_3" sourceRef="step_22" targetRef="step_25" name="Yes"/>
+    <sequenceFlow id="sf_proc_2_4" sourceRef="step_22" targetRef="step_26" name="Cancelled"/>
+    <sequenceFlow id="sf_proc_2_5" sourceRef="step_25" targetRef="step_28"/>
+    <sequenceFlow id="sf_proc_2_6" sourceRef="step_28" targetRef="step_30" name="Yes"/>
+    <sequenceFlow id="sf_proc_2_7" sourceRef="step_28" targetRef="step_31" name="No"/>
+    <sequenceFlow id="sf_proc_2_8" sourceRef="step_30" targetRef="step_34"/>
+  </process>
+
+  <!-- CUSTOMER R -->
+  <process id="proc_3" name="Customer R" isExecutable="false">
+    <startEvent id="step_84" name="Start"/>
+    <task id="step_85" name="Login to myBupa"/>
+    <task id="step_86" name="Privacy"/>
+    <task id="step_87" name="Select View cover details and Change my cover"/>
+    <task id="step_88" name="Enter effective date and new cover details"/>
+    <task id="step_89" name="Notify of turnaround time"/>
+    <task id="step_90" name="Generate email to Cover Review team to action"/>
+    <endEvent id="step_91" name="End - 6.2.5.1 Manage customer myBupa self-service"/>
+    <sequenceFlow id="sf_proc_3_1" sourceRef="step_84" targetRef="step_85"/>
+    <sequenceFlow id="sf_proc_3_2" sourceRef="step_85" targetRef="step_86"/>
+    <sequenceFlow id="sf_proc_3_3" sourceRef="step_86" targetRef="step_87"/>
+    <sequenceFlow id="sf_proc_3_4" sourceRef="step_87" targetRef="step_88"/>
+    <sequenceFlow id="sf_proc_3_5" sourceRef="step_88" targetRef="step_89"/>
+    <sequenceFlow id="sf_proc_3_6" sourceRef="step_89" targetRef="step_90"/>
+    <sequenceFlow id="sf_proc_3_7" sourceRef="step_90" targetRef="step_91"/>
+  </process>
+
+  <!-- EMPLOYER/GROUP -->
+  <process id="proc_4" name="Employer/Group" isExecutable="false">
+  </process>
+
+  <!-- STUB SUB-PROCESSES -->
+  <process id="proc_6_2_2_9_Remove_a_person_from_a_policy" name="6.2.2.9 Remove a person from a policy" isExecutable="false"><startEvent id="s_proc_6_2_2_9_Remove_a_person_from_a_policy"/><endEvent id="e_proc_6_2_2_9_Remove_a_person_from_a_policy"/><sequenceFlow id="f_proc_6_2_2_9_Remove_a_person_from_a_policy" sourceRef="s_proc_6_2_2_9_Remove_a_person_from_a_policy" targetRef="e_proc_6_2_2_9_Remove_a_person_from_a_policy"/></process>
+  <process id="proc_6_2_2_1_Add_a_person_to_a_policy" name="6.2.2.1 Add a person to a policy" isExecutable="false"><startEvent id="s_proc_6_2_2_1_Add_a_person_to_a_policy"/><endEvent id="e_proc_6_2_2_1_Add_a_person_to_a_policy"/><sequenceFlow id="f_proc_6_2_2_1_Add_a_person_to_a_policy" sourceRef="s_proc_6_2_2_1_Add_a_person_to_a_policy" targetRef="e_proc_6_2_2_1_Add_a_person_to_a_policy"/></process>
+  <process id="proc_6_2_2_2_Manage_study_details" name="6.2.2.2 Manage study details" isExecutable="false"><startEvent id="s_proc_6_2_2_2_Manage_study_details"/><endEvent id="e_proc_6_2_2_2_Manage_study_details"/><sequenceFlow id="f_proc_6_2_2_2_Manage_study_details" sourceRef="s_proc_6_2_2_2_Manage_study_details" targetRef="e_proc_6_2_2_2_Manage_study_details"/></process>
+  <process id="proc_6_2_2_3_Manage_Medicare__concession_or_l" name="6.2.2.3 Manage Medicare, concession or loyalty card details" isExecutable="false"><startEvent id="s_proc_6_2_2_3_Manage_Medicare__concession_or_l"/><endEvent id="e_proc_6_2_2_3_Manage_Medicare__concession_or_l"/><sequenceFlow id="f_proc_6_2_2_3_Manage_Medicare__concession_or_l" sourceRef="s_proc_6_2_2_3_Manage_Medicare__concession_or_l" targetRef="e_proc_6_2_2_3_Manage_Medicare__concession_or_l"/></process>
+  <process id="proc_6_2_3_2_3_Maintain_policy_special_offers" name="6.2.3.2.3 Maintain policy special offers" isExecutable="false"><startEvent id="s_proc_6_2_3_2_3_Maintain_policy_special_offers"/><endEvent id="e_proc_6_2_3_2_3_Maintain_policy_special_offers"/><sequenceFlow id="f_proc_6_2_3_2_3_Maintain_policy_special_offers" sourceRef="s_proc_6_2_3_2_3_Maintain_policy_special_offers" targetRef="e_proc_6_2_3_2_3_Maintain_policy_special_offers"/></process>
+  <process id="proc_6_2_2_4_Manage_communication_preferences" name="6.2.2.4 Manage communication preferences" isExecutable="false"><startEvent id="s_proc_6_2_2_4_Manage_communication_preferences"/><endEvent id="e_proc_6_2_2_4_Manage_communication_preferences"/><sequenceFlow id="f_proc_6_2_2_4_Manage_communication_preferences" sourceRef="s_proc_6_2_2_4_Manage_communication_preferences" targetRef="e_proc_6_2_2_4_Manage_communication_preferences"/></process>
+  <process id="proc_6_2_4_1_1_Process_or_maintain_a_rebate_r" name="6.2.4.1.1 Process or maintain a rebate registration" isExecutable="false"><startEvent id="s_proc_6_2_4_1_1_Process_or_maintain_a_rebate_r"/><endEvent id="e_proc_6_2_4_1_1_Process_or_maintain_a_rebate_r"/><sequenceFlow id="f_proc_6_2_4_1_1_Process_or_maintain_a_rebate_r" sourceRef="s_proc_6_2_4_1_1_Process_or_maintain_a_rebate_r" targetRef="e_proc_6_2_4_1_1_Process_or_maintain_a_rebate_r"/></process>
+  <process id="proc_6_2_4_1_2_Maintain_rebate_ties_selection" name="6.2.4.1.2 Maintain rebate ties selection" isExecutable="false"><startEvent id="s_proc_6_2_4_1_2_Maintain_rebate_ties_selection"/><endEvent id="e_proc_6_2_4_1_2_Maintain_rebate_ties_selection"/><sequenceFlow id="f_proc_6_2_4_1_2_Maintain_rebate_ties_selection" sourceRef="s_proc_6_2_4_1_2_Maintain_rebate_ties_selection" targetRef="e_proc_6_2_4_1_2_Maintain_rebate_ties_selection"/></process>
+  <process id="proc_6_2_4_2_4_Maintain_portability" name="6.2.4.2.4 Maintain portability" isExecutable="false"><startEvent id="s_proc_6_2_4_2_4_Maintain_portability"/><endEvent id="e_proc_6_2_4_2_4_Maintain_portability"/><sequenceFlow id="f_proc_6_2_4_2_4_Maintain_portability" sourceRef="s_proc_6_2_4_2_4_Maintain_portability" targetRef="e_proc_6_2_4_2_4_Maintain_portability"/></process>
+  <process id="proc_6_2_4_2_5_Add__maintain_or_revoke_Health" name="6.2.4.2.5 Add, maintain or revoke Health Cover LHC loading" isExecutable="false"><startEvent id="s_proc_6_2_4_2_5_Add__maintain_or_revoke_Health"/><endEvent id="e_proc_6_2_4_2_5_Add__maintain_or_revoke_Health"/><sequenceFlow id="f_proc_6_2_4_2_5_Add__maintain_or_revoke_Health" sourceRef="s_proc_6_2_4_2_5_Add__maintain_or_revoke_Health" targetRef="e_proc_6_2_4_2_5_Add__maintain_or_revoke_Health"/></process>
+  <process id="proc_5_2_4_6_Add__maintain_or_revoke_Age-Base" name="5.2.4.6 Add, maintain or revoke Age-Based Discount (ABD)" isExecutable="false"><startEvent id="s_proc_5_2_4_6_Add__maintain_or_revoke_Age-Base"/><endEvent id="e_proc_5_2_4_6_Add__maintain_or_revoke_Age-Base"/><sequenceFlow id="f_proc_5_2_4_6_Add__maintain_or_revoke_Age-Base" sourceRef="s_proc_5_2_4_6_Add__maintain_or_revoke_Age-Base" targetRef="e_proc_5_2_4_6_Add__maintain_or_revoke_Age-Base"/></process>
+  <process id="proc_4_3_1_5_2_Request_visa_letter" name="4.3.1.5.2 Request visa letter" isExecutable="false"><startEvent id="s_proc_4_3_1_5_2_Request_visa_letter"/><endEvent id="e_proc_4_3_1_5_2_Request_visa_letter"/><sequenceFlow id="f_proc_4_3_1_5_2_Request_visa_letter" sourceRef="s_proc_4_3_1_5_2_Request_visa_letter" targetRef="e_proc_4_3_1_5_2_Request_visa_letter"/></process>
+  <process id="proc_5_4_0_2_2_3_Manage_patient_contact_detai" name="5.4.0.2.2.3 Manage patient contact details &amp; consents / 6.2.2.1 Receive and distribute service request" isExecutable="false"><startEvent id="s_proc_5_4_0_2_2_3_Manage_patient_contact_detai"/><endEvent id="e_proc_5_4_0_2_2_3_Manage_patient_contact_detai"/><sequenceFlow id="f_proc_5_4_0_2_2_3_Manage_patient_contact_detai" sourceRef="s_proc_5_4_0_2_2_3_Manage_patient_contact_detai" targetRef="e_proc_5_4_0_2_2_3_Manage_patient_contact_detai"/></process>
+  <process id="proc_6_2_5_1_2_Manage_a_one_off_payment" name="6.2.5.1.2 Manage a one off payment" isExecutable="false"><startEvent id="s_proc_6_2_5_1_2_Manage_a_one_off_payment"/><endEvent id="e_proc_6_2_5_1_2_Manage_a_one_off_payment"/><sequenceFlow id="f_proc_6_2_5_1_2_Manage_a_one_off_payment" sourceRef="s_proc_6_2_5_1_2_Manage_a_one_off_payment" targetRef="e_proc_6_2_5_1_2_Manage_a_one_off_payment"/></process>
+
+</definitions>

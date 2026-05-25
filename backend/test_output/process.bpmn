@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL"
+             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+             xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI"
+             xmlns:dc="http://www.omg.org/spec/DD/20100524/DC"
+             xmlns:di="http://www.omg.org/spec/DD/20100524/DI"
+             id="definitions_1"
+             targetNamespace="http://bupa.com.au/bpmn/1"
+             name="Bupa Health Insurance Claims Processing">
+
+  <collaboration id="collab_1">
+    <participant id="pool_1" name="Member" processRef="proc_1"/>
+    <participant id="pool_2" name="Claims Team" processRef="proc_2"/>
+    <participant id="pool_3" name="Medical Review" processRef="proc_3"/>
+    <participant id="pool_4" name="Finance" processRef="proc_4"/>
+    <messageFlow id="mf_1" sourceRef="step_2" targetRef="step_3"/>
+    <messageFlow id="mf_2" sourceRef="step_6" targetRef="step_7"/>
+    <messageFlow id="mf_3" sourceRef="step_7" targetRef="step_8"/>
+    <messageFlow id="mf_4" sourceRef="step_8" targetRef="step_10"/>
+    <messageFlow id="mf_5" sourceRef="step_9" targetRef="step_11"/>
+    <messageFlow id="mf_6" sourceRef="step_10" targetRef="step_11"/>
+  </collaboration>
+
+  <!-- MEMBER -->
+  <process id="proc_1" name="Member" isExecutable="true">
+    <startEvent id="step_1" name="Start"/>
+    <endEvent id="step_2" name="Submit Claim"/>
+    <startEvent id="step_11" name="End"/>
+    <sequenceFlow id="sf_proc_1_1" sourceRef="step_1" targetRef="step_2"/>
+  </process>
+
+  <!-- CLAIMS TEAM -->
+  <process id="proc_2" name="Claims Team" isExecutable="false">
+    <startEvent id="step_3" name="Validate Claim Form"/>
+    <exclusiveGateway id="step_4" name="Is Claim Valid?"/>
+    <task id="step_5" name="Assess Claim"/>
+    <exclusiveGateway id="step_6" name="Medical Review Required?"/>
+    <endEvent id="step_8" name="Approve / Decline"/>
+    <endEvent id="step_9" name="Return to Member"/>
+    <sequenceFlow id="sf_proc_2_1" sourceRef="step_3" targetRef="step_4"/>
+    <sequenceFlow id="sf_proc_2_2" sourceRef="step_4" targetRef="step_5" name="Yes — proceed"/>
+    <sequenceFlow id="sf_proc_2_3" sourceRef="step_4" targetRef="step_9" name="No — return to member"/>
+    <sequenceFlow id="sf_proc_2_4" sourceRef="step_5" targetRef="step_6"/>
+    <sequenceFlow id="sf_proc_2_5" sourceRef="step_6" targetRef="step_8" name="Yes"/>
+  </process>
+
+  <!-- MEDICAL REVIEW -->
+  <process id="proc_3" name="Medical Review" isExecutable="false">
+    <startEvent id="step_7" name="Medical Review"/>
+  </process>
+
+  <!-- FINANCE -->
+  <process id="proc_4" name="Finance" isExecutable="false">
+    <startEvent id="step_10" name="Process Payment"/>
+  </process>
+
+</definitions>

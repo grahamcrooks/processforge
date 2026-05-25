@@ -1,0 +1,53 @@
+.log-panel {
+  display: flex;
+  flex-direction: column;
+  padding: 14px 16px;
+}
+
+.log-panel h2 {
+  margin-bottom: 10px;
+}
+
+.log-body {
+  background: #0d1117;
+  border-radius: 6px;
+  padding: 12px 14px;
+  font-family: 'SF Mono', 'Fira Code', 'Cascadia Code', Consolas, monospace;
+  font-size: .78rem;
+  line-height: 1.7;
+  color: #c9d1d9;
+  max-height: 320px;
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: #30363d #0d1117;
+}
+
+.log-body::-webkit-scrollbar { width: 6px; }
+.log-body::-webkit-scrollbar-track { background: #0d1117; }
+.log-body::-webkit-scrollbar-thumb { background: #30363d; border-radius: 3px; }
+
+.log-empty {
+  color: #484f58;
+  font-style: italic;
+}
+
+.log-line {
+  display: flex;
+  gap: 8px;
+  word-break: break-word;
+}
+
+.log-ts {
+  color: #484f58;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.log-text { color: #c9d1d9; }
+
+.log-line.step    .log-text { color: #79c0ff; }
+.log-line.success .log-text { color: #56d364; }
+.log-line.divider .log-text { color: #30363d; }
+.log-line.heading .log-text { color: #e3b341; font-weight: 600; }
+.log-line.detail  .log-text { color: #8b949e; }
+.log-line.error   .log-text { color: #f85149; }

@@ -1,0 +1,6 @@
+{
+  "_note": "Reference only — BPMN XML is generated from image-analysis.json by bpmn_generator.py. No API call is made for this step.",
+  "generated_from": "image-analysis.json",
+  "output_file": "bpmn_change_policy_information.bpmn",
+  "description": "BPMN 2.0 XML representing the Health Insurance Policy Lifecycle process with swimlanes, gateways, tasks, subprocesses (callActivity for child cases), and sequence flows."
+}

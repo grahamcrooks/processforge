@@ -1,0 +1,36 @@
+[
+  {
+    "filename": "CracRAssessorOnly.jpg",
+    "score": 55,
+    "readability": "medium",
+    "notes": "Most task labels and gateway labels are readable, but the diagram is cut off at the bottom, hiding several steps and flow continuations. The swimlane boundary between CRaCA Assessor R and Bupa Medical Advisor R is visible but the Bupa lane is mostly empty in this tile. Several gateway branch labels and downstream flows are truncated or partially obscured, and the bottom portion of the diagram is cut off before the process completes. The diagram is partially visible with several tasks and flow arrows readable, but the image is cropped on the left and bottom edges, cutting off swimlane labels, the top portion of some tasks, and gateway branch labels. Multiple parallel flows converge at a gateway at the bottom, but the branch labels and some arrow destinations are ambiguous. No reference numbers are visible on any steps, making structured extraction difficult. (Tiles: Tile 1: 62% · Tile 2: 52% · Tile 3: 52%)",
+    "unclear_elements": [
+      "Bottom of diagram is cut off — steps below 'Reject hospital claim add message for eclipse claim', 'Add Medical Certificate approved note', 'Add PEC Pending more information required note', and 'Add Deemed Pre-existing note' are not visible",
+      "The 'Decision?' gateway in the Bupa Medical Advisor lane has no visible branch labels",
+      "Arrow from 'Can PEC be approved?' Yes branch destination is partially ambiguous — flows downward to 'Approved' label but continuation is cut off",
+      "Arrow from 'Is more information required?-1' Yes branch flows downward to 'More information' label but continuation is cut off",
+      "System Used label under 'Reject hospital claim add message for eclipse claim' shows BOSS, HOOV, and a partially cut-off third system (appears to be Cyclops)",
+      "Start event label references three process numbers stacked — small text makes exact reading uncertain for 5.3.2.4.3",
+      "Privacy warning icon obscures part of the 'Assess customer eligibility to claim' task box label",
+      "Flow arrow from 'Review Medical Certificate' to 'Decision?' gateway direction is clear but branch outcomes from Decision? are not visible",
+      "Left edge of diagram is cut off — swimlane role label(s) not visible",
+      "Top-left task label is partially cut off ('add message for eclipse claim' — top portion missing)",
+      "Gateway at bottom-center: branch labels not visible — only a '+' parallel gateway symbol shown",
+      "Bottom-left gateway ('Hospital or Medical?') is cut off at the bottom edge — branch labels not readable",
+      "Arrow from 'Prompt PEC: More Information Required SMS' (left column) destination is ambiguous — merges into bottom flow but path is hard to trace",
+      "Arrow from 'Prompt PEC: More Information Required SMS' (center-right column) merges into bottom — exact routing unclear",
+      "Arrow from 'Prompt PEC: Outcome Delivered SMS' (right column) routing to bottom gateway is partially obscured",
+      "The 'Medical' label on the bottom-left gateway branch is cut off — full label not readable",
+      "System Used annotations (BOSS, HOOV, Cyclops, MPMN, MSCI) are small and some are partially legible",
+      "Right edge of diagram may be cutting off additional flow paths",
+      "Left edge cuts off the incoming flow to the 'Hospital or Medical?' gateway — source step not visible",
+      "Top of image cuts off the source of the flow entering the parallel (+) gateway",
+      "Gateway branch label 'Medical' is partially cut off on the left side",
+      "The parallel (+) gateway outgoing/incoming connections are partially outside the visible area",
+      "The 'Via mail' dashed message flow on the right is cut off — destination not visible",
+      "The flow entering 'Send relevant email template to customer' from the top is cut off — source not visible",
+      "Small icon/marker on 'Send relevant email template to customer' task (teal border) purpose is ambiguous",
+      "End event type on the right (appears to be a message end event) is small and partially unclear"
+    ]
+  }
+]

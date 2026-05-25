@@ -1,0 +1,6 @@
+{
+  "_note": "Reference only — DDL SQL is generated from image-analysis.json by ddl_generator.py. No API call is made for this step.",
+  "generated_from": "image-analysis.json",
+  "output_file": "schema.sql",
+  "description": "SQL schema tables derived from data_entities in the extracted process data: CustomerProfile, PolicyRecord, QuoteDocument, CoverDetails, DirectDebitMandate, ClaimsHistory, RiskAssessment."
+}
