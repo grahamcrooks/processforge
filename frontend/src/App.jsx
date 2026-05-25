@@ -130,6 +130,11 @@ export default function App() {
 
   const handleGenerate = async () => {
     if (diagrams.length === 0) return
+    // Capture cached scores before clearing state — passed to backend to skip re-assessment
+    const cachedScores = assessmentOnly && confidenceScores.length > 0
+      ? Object.fromEntries(confidenceScores.map(c => [c.filename, c]))
+      : null
+
     setIsGenerating(true)
     setAssessmentOnly(false)
     setFiles([])
@@ -148,6 +153,7 @@ export default function App() {
       if (pegaModel) formData.append('pega_model', pegaModel)
       formData.append('generate_bpin_doc', generateBpin ? 'true' : 'false')
       if (instructions.trim()) formData.append('process_instructions', instructions.trim())
+      if (cachedScores) formData.append('cached_confidence_json', JSON.stringify(cachedScores))
 
       const b = branding
       if (b.org_name || b.primary_colour !== '#0057B8' || b.logo_base64) {
