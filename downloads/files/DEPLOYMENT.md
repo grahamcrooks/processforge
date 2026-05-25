@@ -2,7 +2,7 @@
 
 ---
 
-## PART 1 — Deploy to AWS EC2 (IP address)
+## PART 1 — Deploy to AWS EC2
 
 ### Step 1 — Launch EC2 instance (AWS Console, 10 mins)
 
@@ -18,12 +18,11 @@
      | 22   | Your IP   | SSH           |
      | 80   | 0.0.0.0/0 | HTTP          |
      | 443  | 0.0.0.0/0 | HTTPS (later) |
-     | 8000 | 0.0.0.0/0 | Temp API test |
 3. Launch — note the **Public IPv4 address**
 
 ---
 
-### Step 2 — Prepare your .pem key (Mac terminal)
+### Step 2 — Prepare your .pem key
 
 ```bash
 chmod 400 ~/Downloads/processforge.pem
@@ -94,10 +93,13 @@ exit
 
 ---
 
-### Step 4 — Create your .env file (on your Mac, in the project root)
+### Step 4 — Create your .env file on the server
+
+SSH in and create `/opt/processforge/.env`:
 
 ```bash
-cat > .env <<EOF
+ssh -i ~/Downloads/processforge.pem ubuntu@<YOUR-EC2-IP>
+cat > /opt/processforge/.env <<EOF
 ANTHROPIC_API_KEY=sk-ant-YOUR-KEY-HERE
 DEV_MODE=false
 MODE_PIN=1234
@@ -109,52 +111,13 @@ EOF
 
 ---
 
-### Step 5 — Copy .env to the server
+### Step 5 — Clone the repo and deploy
+
+From your Mac (the repo and all code are in git — no manual file copying needed):
 
 ```bash
-scp -i ~/Downloads/processforge.pem .env ubuntu@<YOUR-EC2-IP>:/opt/processforge/.env
-```
-
----
-
-### Step 6 — Add mode_pin to config.py
-
-In `backend/config.py`, add this line to the Settings class:
-
-```python
-mode_pin: str = "1234"
-```
-
----
-
-### Step 7 — Add mode route to main.py
-
-In `backend/main.py`, add these two lines after the existing router include:
-
-```python
-from api.routes.mode import router as mode_router
-app.include_router(mode_router)
-```
-
----
-
-### Step 8 — Copy new frontend files
-
-```bash
-# From the project root
-cp ModePanel.jsx      frontend/src/components/
-cp ModePanel.css      frontend/src/components/
-cp App.jsx            frontend/src/
-cp ExtractionResultsPanel.jsx  frontend/src/components/
-cp ExtractionResultsPanel.css  frontend/src/components/
-cp mode.py            backend/api/routes/
-```
-
----
-
-### Step 9 — Deploy
-
-```bash
+git clone https://github.com/grahamcrooks/processforge.git
+cd processforge
 ./deploy.sh ubuntu@<YOUR-EC2-IP> ~/Downloads/processforge.pem
 ```
 
@@ -164,36 +127,45 @@ cp mode.py            backend/api/routes/
 
 ### Switching modes (for you or colleagues)
 
-In the app, the **Mode bar** appears at the top of the page:
+The **Mode bar** appears at the top of the app:
 - 🟢 **Live mode** — real Claude API, uses tokens
 - 🟡 **Mock mode** — sample data, zero cost
 
-Click "Switch to Mock / Live" → enter the PIN → done.
-No SSH required.
+Click "Switch to Mock / Live" → enter the PIN → done. No SSH required.
 
 ---
 
-### Re-deploying after any code change
+### Deploying updates after any code change
 
 ```bash
 ./deploy.sh ubuntu@<YOUR-EC2-IP> ~/Downloads/processforge.pem
 ```
 
-That's it — builds frontend, uploads, restarts service automatically.
+Builds frontend, uploads backend, restarts service — all in one command.
+
+---
+
+### Working from a different Mac
+
+1. `git clone https://github.com/grahamcrooks/processforge.git`
+2. Transfer `processforge.pem` securely (AirDrop, USB — never commit it to git)
+3. `chmod 400 ~/path/to/processforge.pem`
+4. `./deploy.sh ubuntu@<YOUR-EC2-IP> ~/path/to/processforge.pem`
+
+The `.env` on the server (API key, PIN, CORS) stays in place between deploys.
 
 ---
 
 ---
 
-## PART 2 — Add a Custom Domain (do this later)
+## PART 2 — Add a Custom Domain (optional, do later)
 
 ### Step 1 — Buy a domain
 
 Go to AWS Route 53 → Registered Domains → Register domain.
 Suggested: `processforge.io` or `processforge.dev` (~$12-15/yr)
 
-Or use any registrar (GoDaddy, Namecheap) — just cheaper via Route 53
-since it's already in AWS.
+Or use any registrar (GoDaddy, Namecheap).
 
 ---
 
@@ -220,50 +192,35 @@ Also create:
 
 ### Step 4 — Add HTTPS with Let's Encrypt (free)
 
-SSH into your server:
-
 ```bash
 ssh -i ~/Downloads/processforge.pem ubuntu@<YOUR-EC2-IP>
-
 sudo apt install -y certbot python3-certbot-nginx
 sudo certbot --nginx -d yourdomain.com -d www.yourdomain.com
 ```
 
-Follow the prompts — certbot automatically updates nginx config for HTTPS.
+Follow the prompts — certbot updates nginx config automatically.
 Certificate auto-renews every 90 days.
 
 ---
 
-### Step 5 — Update CORS
+### Step 5 — Update CORS and nginx
 
-Update your `.env` on the server:
+Update `.env` on the server:
 
 ```bash
 ssh -i ~/Downloads/processforge.pem ubuntu@<YOUR-EC2-IP>
 nano /opt/processforge/.env
-```
-
-Change:
-```
-CORS_ORIGINS=["https://yourdomain.com","https://www.yourdomain.com"]
-```
-
-Then restart:
-```bash
+# Change CORS_ORIGINS to:
+# CORS_ORIGINS=["https://yourdomain.com","https://www.yourdomain.com"]
 sudo systemctl restart processforge
 ```
 
----
-
-### Step 6 — Update nginx for your domain
+Update nginx:
 
 ```bash
 sudo nano /etc/nginx/sites-available/processforge
-```
-
-Change `server_name _;` to `server_name yourdomain.com www.yourdomain.com;`
-
-```bash
+# Change: server_name _;
+# To:     server_name yourdomain.com www.yourdomain.com;
 sudo nginx -t && sudo systemctl reload nginx
 ```
 
