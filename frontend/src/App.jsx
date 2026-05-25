@@ -2,6 +2,8 @@ import { useState } from 'react'
 import UploadPanel      from './components/UploadPanel.jsx'
 import BrandingPanel    from './components/BrandingPanel.jsx'
 import ExtractionPanel  from './components/ExtractionPanel.jsx'
+import RefMapPanel      from './components/RefMapPanel.jsx'
+import ProcessMapPage   from './components/ProcessMapPage.jsx'
 import ProgressPanel    from './components/ProgressPanel.jsx'
 import LogPanel         from './components/LogPanel.jsx'
 import DownloadPanel    from './components/DownloadPanel.jsx'
@@ -45,6 +47,8 @@ export default function App() {
   const [warnings, setWarnings]             = useState([])
   const [genError, setGenError]             = useState(null)
   const [confidenceScores, setConfidenceScores] = useState([])
+  const [refMapData, setRefMapData]         = useState(null)
+  const [showProcessMap, setShowProcessMap] = useState(false)
 
   function addLog(text, type = '') {
     setLog(prev => [...prev, { ts: nowTs(), text, type }])
@@ -115,6 +119,9 @@ export default function App() {
         if (payload.type === 'confidence') {
           updateConfidence(payload.data)
           addLog(`${payload.data.filename} — ${payload.data.score}% confidence`, 'detail')
+        } else if (payload.type === 'ref_map') {
+          setRefMapData(payload.data)
+          addLog('Reference map built ✓', 'success')
         } else if (payload.type === 'complete') {
           addLog('Assessment complete ✓', 'success')
         } else if (payload.type === 'error') {
@@ -205,6 +212,15 @@ export default function App() {
     }
   }
 
+  function handleApplyOrder(orderedFilenames) {
+    setDiagrams(prev => {
+      const byName = Object.fromEntries(prev.map(f => [f.name, f]))
+      const reordered = orderedFilenames.filter(fn => byName[fn]).map(fn => byName[fn])
+      const remaining = prev.filter(f => !orderedFilenames.includes(f.name))
+      return [...reordered, ...remaining]
+    })
+  }
+
   function handleRestart() {
     setFiles([])
     setWarnings([])
@@ -212,6 +228,7 @@ export default function App() {
     setSteps([])
     setLog([])
     setConfidenceScores([])
+    setRefMapData(null)
     setAssessmentOnly(false)
   }
 
@@ -226,40 +243,21 @@ export default function App() {
         <div className="header-inner">
           <div className="header-logo">⚙️</div>
           <div>
-            <div className="header-title">Process Forge — Policy</div>
-            <div className="header-sub">AI-powered artefact generation for Policy Management processes</div>
+            <div className="header-title">Process Forge</div>
+            <div className="header-sub">AI-powered artefact generation from process diagrams</div>
           </div>
         </div>
+        {diagrams.length > 0 && (
+          <button className="process-map-btn" onClick={() => setShowProcessMap(true)}>
+            🗺 Process Map
+          </button>
+        )}
       </header>
 
       <main className="app-main">
 
         <div className="left-col">
           <ModePanel />
-          <UploadPanel
-            diagrams={diagrams}
-            setDiagrams={setDiagrams}
-            pegaModel={pegaModel}
-            setPegaModel={setPegaModel}
-            instructions={instructions}
-            setInstructions={setInstructions}
-          />
-          <BrandingPanel
-            branding={branding}
-            setBranding={setBranding}
-            generateBpin={generateBpin}
-            setGenerateBpin={setGenerateBpin}
-          />
-        </div>
-
-        <div className="right-col">
-          <ExtractionPanel
-            confidenceScores={confidenceScores}
-            isGenerating={isGenerating}
-            isAssessing={isAssessing}
-            assessmentOnly={assessmentOnly}
-          />
-
           <div className="generate-row">
             <button
               className="assess-btn"
@@ -288,9 +286,40 @@ export default function App() {
                 ↺ Run Again
               </button>
             ) : diagrams.length === 0 ? (
-              <span className="generate-hint">Upload at least one PNG diagram to begin</span>
+              <span className="generate-hint">Upload diagrams to begin</span>
             ) : null}
           </div>
+          <UploadPanel
+            diagrams={diagrams}
+            setDiagrams={setDiagrams}
+            pegaModel={pegaModel}
+            setPegaModel={setPegaModel}
+            instructions={instructions}
+            setInstructions={setInstructions}
+          />
+          <BrandingPanel
+            branding={branding}
+            setBranding={setBranding}
+            generateBpin={generateBpin}
+            setGenerateBpin={setGenerateBpin}
+          />
+        </div>
+
+        <div className="right-col">
+          <ExtractionPanel
+            confidenceScores={confidenceScores}
+            isGenerating={isGenerating}
+            isAssessing={isAssessing}
+            assessmentOnly={assessmentOnly}
+          />
+
+          <RefMapPanel
+            refMapData={refMapData}
+            onApplyInstructions={setInstructions}
+            onApplyOrder={handleApplyOrder}
+            currentOrder={diagrams.map(f => f.name)}
+            currentInstructions={instructions}
+          />
 
           <ProgressPanel steps={steps} warnings={warnings} error={genError} />
 
@@ -302,8 +331,18 @@ export default function App() {
       </main>
 
       <footer className="app-footer">
-        Process Forge — Policy · powered by Claude claude-sonnet-4-6
+        Process Forge · powered by Claude claude-sonnet-4-6
       </footer>
+
+      {showProcessMap && (
+        <ProcessMapPage
+          diagrams={diagrams}
+          refMapData={refMapData}
+          onClose={() => setShowProcessMap(false)}
+          onApplyInstructions={setInstructions}
+          currentInstructions={instructions}
+        />
+      )}
     </div>
   )
 }
