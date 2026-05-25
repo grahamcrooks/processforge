@@ -199,9 +199,20 @@ export default function App() {
     }
   }
 
-  const busy       = isGenerating || isAssessing
-  const canAssess  = diagrams.length > 0 && !busy
+  function handleRestart() {
+    setFiles([])
+    setWarnings([])
+    setGenError(null)
+    setSteps([])
+    setLog([])
+    setConfidenceScores([])
+    setAssessmentOnly(false)
+  }
+
+  const busy        = isGenerating || isAssessing
+  const canAssess   = diagrams.length > 0 && !busy
   const canGenerate = diagrams.length > 0 && !busy
+  const isDone      = files.length > 0 && !busy
 
   return (
     <div className="app">
@@ -266,9 +277,13 @@ export default function App() {
                 : '⚡ Generate Artefacts'
               }
             </button>
-            {diagrams.length === 0 && (
+            {isDone ? (
+              <button className="restart-btn" onClick={handleRestart}>
+                ↺ Run Again
+              </button>
+            ) : diagrams.length === 0 ? (
               <span className="generate-hint">Upload at least one PNG diagram to begin</span>
-            )}
+            ) : null}
           </div>
 
           <ProgressPanel steps={steps} warnings={warnings} error={genError} />
