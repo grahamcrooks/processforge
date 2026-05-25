@@ -3,7 +3,10 @@
     "allow": [
       "Bash(git -C /Users/croog/bupa-blueprint-app-v2 log --oneline -10)",
       "Bash(xargs ls *)",
-      "Bash(npm run *)"
+      "Bash(npm run *)",
+      "Bash(git commit *)",
+      "Bash(git push *)",
+      "Bash(git add *)"
     ]
   }
 }
