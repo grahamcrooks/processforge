@@ -223,9 +223,12 @@ export default function App() {
   }
 
   const BPMN_STEPS = [
-    { label: 'Uploading files',                    key: 'upload' },
-    { label: 'Analysing & generating BPMN files',  key: 'claude' },
-    { label: 'Packaging artefacts',                key: 'done'   },
+    { label: 'Uploading files',               key: 'upload'  },
+    { label: 'Analysing diagrams',            key: 'claude'  },
+    { label: 'Generating BPMN process flows', key: 'bpmn'    },
+    { label: 'Generating database schema',    key: 'ddl'     },
+    { label: 'Generating OpenAPI spec',       key: 'openapi' },
+    { label: 'Packaging artefacts',           key: 'done'    },
   ]
 
   const handleGenerateBpmn = async () => {

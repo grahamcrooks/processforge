@@ -106,7 +106,6 @@ async def generate_bpmn_artefacts(
     async def event_stream():
         try:
             files = []
-            total = len(diagram_bytes)
 
             yield _sse({"type": "step", "key": "claude"})
 
@@ -119,19 +118,38 @@ async def generate_bpmn_artefacts(
                         process_data = event["process_data"]
                     # confidence events deliberately suppressed — not shown in BPMN mode
 
-                if process_data:
-                    slug = _file_slug(process_data.get("process_name", filename.rsplit(".", 1)[0]))
-                    bpmn_bytes = generate_bpmn(process_data)
-                    files.append(encode_file(f"{slug}.bpmn", bpmn_bytes, "application/xml"))
-                    steps_count = len(process_data.get("steps", []))
-                    lanes_count = len(process_data.get("lanes", []))
-                    yield _sse({"type": "detail", "message":
-                        f"  ↳ {slug}.bpmn written — {steps_count} steps · {lanes_count} lanes"})
-                else:
+                if not process_data:
                     yield _sse({"type": "detail", "message": f"  ↳ Warning: could not extract process data from {filename}"})
+                    continue
+
+                slug        = _file_slug(process_data.get("process_name", filename.rsplit(".", 1)[0]))
+                steps_count = len(process_data.get("steps", []))
+                lanes_count = len(process_data.get("lanes", []))
+                entities    = process_data.get("data_entities", [])
+                integrations = process_data.get("integrations", [])
+
+                # BPMN
+                yield _sse({"type": "step", "key": "bpmn"})
+                files.append(encode_file(f"{slug}.bpmn", generate_bpmn(process_data), "application/xml"))
+                yield _sse({"type": "detail", "message":
+                    f"  ↳ {slug}.bpmn — {steps_count} steps · {lanes_count} lanes"})
+
+                # DDL
+                yield _sse({"type": "step", "key": "ddl"})
+                files.append(encode_file(f"{slug}-schema.sql", generate_ddl(process_data, None), "text/plain"))
+                yield _sse({"type": "detail", "message":
+                    f"  ↳ {slug}-schema.sql — {len(entities)} {'entity' if len(entities) == 1 else 'entities'}"})
+
+                # OpenAPI
+                yield _sse({"type": "step", "key": "openapi"})
+                files.append(encode_file(f"{slug}-api-spec.yaml", generate_openapi(process_data), "application/x-yaml"))
+                yield _sse({"type": "detail", "message":
+                    f"  ↳ {slug}-api-spec.yaml — {len(integrations)} integration endpoint{'s' if len(integrations) != 1 else ''}"})
 
             yield _sse({"type": "step", "key": "done"})
-            yield _sse({"type": "detail", "message": f"Packaged {len(files)} BPMN file{'s' if len(files) != 1 else ''}"})
+            bpmn_count = sum(1 for f in files if f.get("filename", "").endswith(".bpmn"))
+            yield _sse({"type": "detail", "message":
+                f"Packaged {len(files)} artefact{'s' if len(files) != 1 else ''} ({bpmn_count} BPMN{'s' if bpmn_count != 1 else ''})"})
 
             from api.models.schemas import GenerateResponse
             response = GenerateResponse(files=files, warnings=[], confidence_scores=[])
