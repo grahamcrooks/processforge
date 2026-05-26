@@ -38,6 +38,7 @@ export default function App() {
     org_name: '', primary_colour: '#0057B8', logo_base64: null, logo_name: null,
   })
 
+  const [mode, setMode]                     = useState('score')
   const [isGenerating, setIsGenerating]     = useState(false)
   const [isAssessing, setIsAssessing]       = useState(false)
   const [assessmentOnly, setAssessmentOnly] = useState(false)
@@ -258,36 +259,60 @@ export default function App() {
 
         <div className="left-col">
           <ModePanel />
-          <div className="generate-row">
-            <button
-              className="assess-btn"
-              disabled={!canAssess}
-              data-active={isAssessing || undefined}
-              onClick={handleAssess}
-            >
-              {isAssessing
-                ? <><span className="btn-spinner" /> Assessing…</>
-                : '🔍 Assess Quality'
-              }
-            </button>
-            <button
-              className="generate-btn"
-              disabled={!canGenerate}
-              data-active={isGenerating || undefined}
-              onClick={handleGenerate}
-            >
-              {isGenerating
-                ? <><span className="btn-spinner" /> Generating…</>
-                : '⚡ Generate Artefacts'
-              }
-            </button>
-            {isDone ? (
-              <button className="restart-btn" onClick={handleRestart}>
-                ↺ Run Again
-              </button>
-            ) : diagrams.length === 0 ? (
-              <span className="generate-hint">Upload diagrams to begin</span>
-            ) : null}
+          <div className="action-card">
+            <div className="mode-tabs">
+              <button
+                className={`mode-tab${mode === 'score' ? ' active' : ''}`}
+                onClick={() => setMode('score')}
+              >Score &amp; Extract</button>
+              <button
+                className={`mode-tab${mode === 'bpmn' ? ' active' : ''}`}
+                onClick={() => setMode('bpmn')}
+              >BPMN Generation</button>
+            </div>
+            <div className="generate-row">
+              {mode === 'score' ? (
+                <>
+                  <button
+                    className="assess-btn"
+                    disabled={!canAssess}
+                    data-active={isAssessing || undefined}
+                    onClick={handleAssess}
+                  >
+                    {isAssessing
+                      ? <><span className="btn-spinner" /> Assessing…</>
+                      : '🔍 Assess Quality'
+                    }
+                  </button>
+                  <button
+                    className="generate-btn"
+                    disabled={!canGenerate}
+                    data-active={isGenerating || undefined}
+                    onClick={handleGenerate}
+                  >
+                    {isGenerating
+                      ? <><span className="btn-spinner" /> Generating…</>
+                      : '⚡ Generate Artefacts'
+                    }
+                  </button>
+                </>
+              ) : (
+                <button
+                  className="generate-btn"
+                  disabled={!canGenerate}
+                  style={{ gridColumn: '1 / -1' }}
+                >
+                  🗂 Generate BPMN
+                </button>
+              )}
+              {isDone ? (
+                <button className="restart-btn" onClick={handleRestart}>
+                  ↺ Run Again
+                </button>
+              ) : diagrams.length === 0 ? (
+                <span className="generate-hint">Upload diagrams to begin</span>
+              ) : null}
+            </div>
           </div>
           <UploadPanel
             diagrams={diagrams}
