@@ -400,12 +400,14 @@ export default function App() {
         </div>
 
         <div className="right-col">
-          <ExtractionPanel
-            confidenceScores={confidenceScores}
-            isGenerating={isGenerating}
-            isAssessing={isAssessing}
-            assessmentOnly={assessmentOnly}
-          />
+          {mode === 'score' && (
+            <ExtractionPanel
+              confidenceScores={confidenceScores}
+              isGenerating={isGenerating}
+              isAssessing={isAssessing}
+              assessmentOnly={assessmentOnly}
+            />
+          )}
 
           <RefMapPanel
             refMapData={refMapData}

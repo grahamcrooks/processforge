@@ -111,16 +111,13 @@ async def generate_bpmn_artefacts(
             yield _sse({"type": "step", "key": "claude"})
 
             for i, (filename, img_bytes) in enumerate(diagram_bytes):
-                yield _sse({"type": "image_start", "filename": filename, "tiling": None})
-
                 process_data = None
                 async for event in analyse_diagrams_stream([(filename, img_bytes)], process_instructions, None):
                     if event["type"] == "image_start":
                         yield _sse({"type": "image_start", "filename": event["filename"], "tiling": event["tiling"]})
-                    elif event["type"] == "image":
-                        yield _sse({"type": "confidence", "data": event["confidence"]})
                     elif event["type"] == "done":
                         process_data = event["process_data"]
+                    # confidence events deliberately suppressed — not shown in BPMN mode
 
                 if process_data:
                     slug = _file_slug(process_data.get("process_name", filename.rsplit(".", 1)[0]))
