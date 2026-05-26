@@ -222,6 +222,70 @@ export default function App() {
     })
   }
 
+  const BPMN_STEPS = [
+    { label: 'Uploading files',                    key: 'upload' },
+    { label: 'Analysing & generating BPMN files',  key: 'claude' },
+    { label: 'Packaging artefacts',                key: 'done'   },
+  ]
+
+  const handleGenerateBpmn = async () => {
+    if (diagrams.length === 0) return
+    setIsGenerating(true)
+    setAssessmentOnly(false)
+    setFiles([])
+    setWarnings([])
+    setGenError(null)
+    setLog([])
+
+    const initialSteps = BPMN_STEPS.map(s => ({ ...s, status: 'pending' }))
+    setSteps(initialSteps)
+    setSteps(prev => prev.map((s, i) => i === 0 ? { ...s, status: 'done' } : s))
+    addLog('Files uploaded — starting BPMN pipeline', 'step')
+
+    try {
+      const formData = new FormData()
+      diagrams.forEach(f => formData.append('diagrams', f))
+      if (instructions.trim()) formData.append('process_instructions', instructions.trim())
+
+      const res = await fetch('/api/generate-bpmn', { method: 'POST', body: formData })
+      if (!res.ok) {
+        const detail = await res.json().catch(() => ({}))
+        throw new Error(detail?.detail || `Server error ${res.status}`)
+      }
+
+      let completed = false
+      await readSseStream(res, payload => {
+        if (payload.type === 'step') {
+          markStep(payload.key, BPMN_STEPS)
+        } else if (payload.type === 'image_start') {
+          const tiling = payload.tiling ? ` (${payload.tiling})` : ''
+          addLog(`Processing ${payload.filename}${tiling}`, 'detail')
+        } else if (payload.type === 'confidence') {
+          updateConfidence(payload.data)
+          addLog(`  ↳ ${payload.data.filename} — ${payload.data.score}% confidence`, 'detail')
+        } else if (payload.type === 'detail') {
+          addLog(payload.message, 'detail')
+        } else if (payload.type === 'complete') {
+          completed = true
+          setSteps(prev => prev.map(s => ({ ...s, status: 'done' })))
+          addLog('BPMN generation complete ✓', 'success')
+          setFiles(payload.data.files || [])
+          setWarnings(payload.data.warnings || [])
+          setIsGenerating(false)
+        } else if (payload.type === 'error') {
+          throw new Error(payload.message)
+        }
+      })
+
+      if (!completed) throw new Error('Stream ended without completing — check the backend.')
+    } catch (err) {
+      setGenError(err.message || 'Unexpected error — check the backend.')
+      setSteps(prev => prev.map(s => s.status === 'active' ? { ...s, status: 'error' } : s))
+      addLog(`Error: ${err.message}`, 'error')
+      setIsGenerating(false)
+    }
+  }
+
   function handleRestart() {
     setFiles([])
     setWarnings([])
@@ -300,9 +364,14 @@ export default function App() {
                 <button
                   className="generate-btn"
                   disabled={!canGenerate}
+                  data-active={isGenerating || undefined}
+                  onClick={handleGenerateBpmn}
                   style={{ gridColumn: '1 / -1' }}
                 >
-                  🗂 Generate BPMN
+                  {isGenerating
+                    ? <><span className="btn-spinner" /> Generating…</>
+                    : '⚡ Generate Artefacts'
+                  }
                 </button>
               )}
               {isDone ? (

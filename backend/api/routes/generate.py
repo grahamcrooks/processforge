@@ -88,6 +88,69 @@ async def assess(
     )
 
 
+@router.post("/generate-bpmn")
+async def generate_bpmn_artefacts(
+    diagrams: list[UploadFile] = File(..., description="One or more PNG process flow diagrams"),
+    process_instructions: Optional[str] = Form(None),
+):
+    """BPMN Generation mode — generates one Blueprint-format BPMN per uploaded diagram."""
+    image_exts = {".png", ".jpg", ".jpeg", ".gif", ".webp"}
+    for f in diagrams:
+        ext = ("." + f.filename.rsplit(".", 1)[-1].lower()) if f.filename and "." in f.filename else ""
+        is_image = (f.content_type and f.content_type.startswith("image/")) or ext in image_exts
+        if not is_image:
+            raise HTTPException(status_code=400, detail=f"{f.filename} is not an image file.")
+
+    diagram_bytes = [(f.filename, await f.read()) for f in diagrams]
+
+    async def event_stream():
+        try:
+            files = []
+            total = len(diagram_bytes)
+
+            yield _sse({"type": "step", "key": "claude"})
+
+            for i, (filename, img_bytes) in enumerate(diagram_bytes):
+                yield _sse({"type": "image_start", "filename": filename, "tiling": None})
+
+                process_data = None
+                async for event in analyse_diagrams_stream([(filename, img_bytes)], process_instructions, None):
+                    if event["type"] == "image_start":
+                        yield _sse({"type": "image_start", "filename": event["filename"], "tiling": event["tiling"]})
+                    elif event["type"] == "image":
+                        yield _sse({"type": "confidence", "data": event["confidence"]})
+                    elif event["type"] == "done":
+                        process_data = event["process_data"]
+
+                if process_data:
+                    slug = _file_slug(process_data.get("process_name", filename.rsplit(".", 1)[0]))
+                    bpmn_bytes = generate_bpmn(process_data)
+                    files.append(encode_file(f"{slug}.bpmn", bpmn_bytes, "application/xml"))
+                    steps_count = len(process_data.get("steps", []))
+                    lanes_count = len(process_data.get("lanes", []))
+                    yield _sse({"type": "detail", "message":
+                        f"  ↳ {slug}.bpmn written — {steps_count} steps · {lanes_count} lanes"})
+                else:
+                    yield _sse({"type": "detail", "message": f"  ↳ Warning: could not extract process data from {filename}"})
+
+            yield _sse({"type": "step", "key": "done"})
+            yield _sse({"type": "detail", "message": f"Packaged {len(files)} BPMN file{'s' if len(files) != 1 else ''}"})
+
+            from api.models.schemas import GenerateResponse
+            response = GenerateResponse(files=files, warnings=[], confidence_scores=[])
+            yield _sse({"type": "complete", "data": response.model_dump()})
+
+        except Exception as exc:
+            logger.exception("Error in generate-bpmn stream")
+            yield _sse({"type": "error", "message": str(exc)})
+
+    return StreamingResponse(
+        event_stream(),
+        media_type="text/event-stream",
+        headers={"Cache-Control": "no-cache", "X-Accel-Buffering": "no"},
+    )
+
+
 @router.post("/generate")
 async def generate(
     diagrams: list[UploadFile] = File(..., description="One or more PNG process flow diagrams"),
