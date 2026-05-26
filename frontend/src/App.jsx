@@ -55,6 +55,13 @@ export default function App() {
     setLog(prev => [...prev, { ts: nowTs(), text, type }])
   }
 
+  function formatTiling(t) {
+    if (!t) return ''
+    if (typeof t === 'string') return ` (${t})`
+    const dims = t.width && t.height ? ` · ${t.width}×${t.height}px` : ''
+    return t.tiled ? ` (${t.tile_count} tiles${dims})` : dims ? ` (${dims.slice(3)})` : ''
+  }
+
   function markStep(key, allSteps) {
     setSteps(prev => {
       const idx = prev.findIndex(s => s.key === key)
@@ -184,8 +191,7 @@ export default function App() {
         if (payload.type === 'step') {
           markStep(payload.key, initialSteps)
         } else if (payload.type === 'image_start') {
-          const tiling = payload.tiling ? ` (${payload.tiling})` : ''
-          addLog(`Processing ${payload.filename}${tiling}`, 'detail')
+          addLog(`Processing ${payload.filename}${formatTiling(payload.tiling)}`, 'detail')
         } else if (payload.type === 'confidence') {
           updateConfidence(payload.data)
           addLog(`  ↳ ${payload.data.filename} — ${payload.data.score}% confidence`, 'detail')
@@ -261,8 +267,7 @@ export default function App() {
         if (payload.type === 'step') {
           markStep(payload.key, BPMN_STEPS)
         } else if (payload.type === 'image_start') {
-          const tiling = payload.tiling ? ` (${payload.tiling})` : ''
-          addLog(`Processing ${payload.filename}${tiling}`, 'detail')
+          addLog(`Processing ${payload.filename}${formatTiling(payload.tiling)}`, 'detail')
         } else if (payload.type === 'confidence') {
           updateConfidence(payload.data)
           addLog(`  ↳ ${payload.data.filename} — ${payload.data.score}% confidence`, 'detail')

@@ -110,12 +110,25 @@ async def generate_bpmn_artefacts(
             # ── Phase 1: analyse all diagrams together → merged process_data ──
             yield _sse({"type": "step", "key": "claude"})
 
+            total = len(diagram_bytes)
+            yield _sse({"type": "detail", "message":
+                f"Sending {total} diagram{'s' if total != 1 else ''} to Claude Vision for extraction…"})
+
             process_data = None
             async for event in analyse_diagrams_stream(diagram_bytes, process_instructions, None):
                 if event["type"] == "image_start":
                     yield _sse({"type": "image_start", "filename": event["filename"], "tiling": event["tiling"]})
+                elif event["type"] == "detail":
+                    yield _sse({"type": "detail", "message": event["message"]})
                 elif event["type"] == "done":
                     process_data = event["process_data"]
+                    steps_total = len(process_data.get("steps", []))
+                    lanes_total = len(process_data.get("lanes", []))
+                    gateways    = sum(1 for s in process_data.get("steps", []) if s.get("type") == "gateway")
+                    subprocs    = sum(1 for s in process_data.get("steps", []) if s.get("type") == "subprocess")
+                    yield _sse({"type": "detail", "message":
+                        f"Extraction complete — {steps_total} steps · {lanes_total} lanes · "
+                        f"{gateways} gateways · {subprocs} subprocesses"})
                 # confidence events suppressed — not shown in BPMN mode
 
             if not process_data:
