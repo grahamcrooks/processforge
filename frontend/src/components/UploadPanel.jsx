@@ -122,7 +122,7 @@ function DropZone({ label, accept, multiple, hasFiles, onFiles, hint, children }
   )
 }
 
-export default function UploadPanel({ diagrams, setDiagrams, pegaModel, setPegaModel, instructions, setInstructions }) {
+export default function UploadPanel({ diagrams, setDiagrams, pegaModel, setPegaModel, instructions, setInstructions, mode }) {
   const [dims, setDims] = useState({})   // keyed by file.name + file.size
   const [collapsed, setCollapsed] = useState(false)
 
@@ -234,18 +234,22 @@ export default function UploadPanel({ diagrams, setDiagrams, pegaModel, setPegaM
         </div>
       </DropZone>
 
-      <div className="optional-label" style={{marginTop: '8px'}}>Optional — Process instructions</div>
-      <textarea
-        className="instructions-input"
-        placeholder="e.g. 6.2.3.1.1 is a child case; 6.2.3.1.2 and 6.2.3.1.3 are inline subprocesses of the parent case"
-        value={instructions}
-        onChange={e => setInstructions(e.target.value)}
-        rows={3}
-      />
-      <p className="instructions-hint">
-        Use this field to tell the model how to classify subprocesses — which reference numbers are
-        child cases (<code>&lt;callActivity&gt;</code>) and which are inline (<code>&lt;subProcess&gt;</code>).
-      </p>
+      {mode !== 'bpmn' && (
+        <>
+          <div className="optional-label" style={{marginTop: '8px'}}>Optional — Process instructions</div>
+          <textarea
+            className="instructions-input"
+            placeholder="e.g. 6.2.3.1.1 is a child case; 6.2.3.1.2 and 6.2.3.1.3 are inline subprocesses of the parent case"
+            value={instructions}
+            onChange={e => setInstructions(e.target.value)}
+            rows={3}
+          />
+          <p className="instructions-hint">
+            Use this field to tell the model how to classify subprocesses — which reference numbers are
+            child cases (<code>&lt;callActivity&gt;</code>) and which are inline (<code>&lt;subProcess&gt;</code>).
+          </p>
+        </>
+      )}
         </>
       )}
     </section>

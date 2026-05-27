@@ -398,6 +398,7 @@ export default function App() {
             setPegaModel={setPegaModel}
             instructions={instructions}
             setInstructions={setInstructions}
+            mode={mode}
           />
           <BrandingPanel
             branding={branding}
