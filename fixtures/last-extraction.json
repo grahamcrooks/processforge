@@ -1,7 +1,8 @@
 {
-  "process_name": "6.2.6.3 Manage Triage of Escalated HI Complaints (Current State Architecture)",
+  "process_name": "CRaCA Assessor R - Claim Related Assessment Process",
   "lanes": [
-    "3rd Party",
+    "CRaCA Assessor R",
+    "Bupa Medical Advisor R",
     "Customer",
     "HI Customer Advocacy Co-ordinator",
     "HI Customer Complaints Support Manager"
@@ -11,8 +12,7 @@
       "id": "step_1",
       "type": "event",
       "name": "Start",
-      "source_ref": null,
-      "lane": "Customer",
+      "lane": "CRaCA Assessor R",
       "sequence": [
         "step_2"
       ]
@@ -20,189 +20,148 @@
     {
       "id": "step_2",
       "type": "task",
-      "name": "Forward complaint received to Customer Relations mailbox",
-      "source_ref": null,
-      "lane": "Customer",
+      "name": "Assess customer eligibility to claim",
+      "lane": "CRaCA Assessor R",
       "sequence": [
         "step_3"
       ]
     },
     {
       "id": "step_3",
-      "type": "event",
-      "name": "Start",
-      "source_ref": null,
-      "lane": "HI Customer Advocacy Co-ordinator",
+      "type": "gateway",
+      "name": "Does this need to be escalated to Customer Relations?",
+      "lane": "CRaCA Assessor R",
       "sequence": [
-        "step_4"
+        "step_4",
+        "step_6"
       ]
     },
     {
       "id": "step_4",
-      "type": "gateway",
-      "name": "Is this a health insurance related complaint?",
-      "source_ref": null,
-      "lane": "HI Customer Advocacy Co-ordinator",
+      "type": "event",
+      "name": "End",
+      "lane": "CRaCA Assessor R",
       "sequence": [
-        "step_6",
         "step_5"
       ]
     },
     {
       "id": "step_5",
-      "type": "task",
-      "name": "Forward to the relevent department",
-      "source_ref": null,
-      "lane": "HI Customer Advocacy Co-ordinator",
-      "sequence": [
-        "step_5a"
-      ]
-    },
-    {
-      "id": "step_5a",
-      "type": "event",
-      "name": "End",
-      "source_ref": null,
-      "lane": "HI Customer Advocacy Co-ordinator",
+      "type": "subprocess",
+      "name": "Manage triage of escalated HI complaints",
+      "lane": "CRaCA Assessor R",
       "sequence": []
     },
     {
       "id": "step_6",
       "type": "gateway",
-      "name": "Is there an existing case?",
-      "source_ref": null,
-      "lane": "HI Customer Advocacy Co-ordinator",
+      "name": "Has customer provided Medical Certificate?",
+      "lane": "CRaCA Assessor R",
       "sequence": [
         "step_7",
-        "step_8"
+        "step_9"
       ]
     },
     {
       "id": "step_7",
       "type": "task",
-      "name": "Open existing case",
-      "source_ref": null,
-      "lane": "HI Customer Advocacy Co-ordinator",
+      "name": "Prompt 'PEC: Assessment Started' SMS via the communications hub",
+      "lane": "CRaCA Assessor R",
       "sequence": [
-        "step_9"
+        "step_8"
       ]
     },
     {
       "id": "step_8",
-      "type": "task",
-      "name": "Open membership and create a new case",
-      "source_ref": null,
-      "lane": "HI Customer Advocacy Co-ordinator",
+      "type": "gateway",
+      "name": "Can PEC be approved?",
+      "lane": "CRaCA Assessor R",
       "sequence": [
-        "step_9"
+        "step_17",
+        "step_11"
       ]
     },
     {
       "id": "step_9",
-      "type": "task",
-      "name": "Assess case and assign the appropriate severity and priority level",
-      "source_ref": null,
-      "lane": "HI Customer Advocacy Co-ordinator",
+      "type": "gateway",
+      "name": "Can claim be approved for PEC without a medical certificate?",
+      "lane": "CRaCA Assessor R",
       "sequence": [
+        "step_17",
         "step_10"
       ]
     },
     {
       "id": "step_10",
       "type": "task",
-      "name": "Update system with complaint details",
-      "source_ref": null,
-      "lane": "HI Customer Advocacy Co-ordinator",
-      "sequence": [
-        "step_11"
-      ]
-    },
-    {
-      "id": "step_11",
-      "type": "gateway",
-      "name": "Is this an executive complaint?",
-      "source_ref": null,
-      "lane": "HI Customer Advocacy Co-ordinator",
-      "sequence": [
-        "step_13",
-        "step_12"
-      ]
-    },
-    {
-      "id": "step_12",
-      "type": "subprocess",
-      "subtype": "child_case",
-      "name": "Manage health insurance escalated complaints",
-      "source_ref": "6.2.6.4",
-      "lane": "HI Customer Advocacy Co-ordinator",
-      "sequence": [
-        "step_12a"
-      ]
-    },
-    {
-      "id": "step_12a",
-      "type": "event",
-      "name": "End",
-      "source_ref": null,
-      "lane": "HI Customer Advocacy Co-ordinator",
-      "sequence": []
-    },
-    {
-      "id": "step_13",
-      "type": "gateway",
-      "name": "Has case been assigned?",
-      "source_ref": null,
-      "lane": "HI Customer Advocacy Co-ordinator",
-      "sequence": [
-        "step_14",
-        "step_15"
-      ]
-    },
-    {
-      "id": "step_14",
-      "type": "task",
-      "name": "Advise the assigned specialist that this has now been escalated to senior customer relations specialist",
-      "source_ref": null,
-      "lane": "HI Customer Advocacy Co-ordinator",
+      "name": "Reject hospital claim add message for eclipse claim",
+      "lane": "CRaCA Assessor R",
       "sequence": [
         "step_16"
       ]
     },
     {
-      "id": "step_15",
-      "type": "task",
-      "name": "Contact complaints leadership to determine who to assign case to",
-      "source_ref": null,
-      "lane": "HI Customer Advocacy Co-ordinator",
+      "id": "step_11",
+      "type": "gateway",
+      "name": "Is more information required?-1",
+      "lane": "CRaCA Assessor R",
       "sequence": [
-        "step_17"
+        "step_19",
+        "step_12"
+      ]
+    },
+    {
+      "id": "step_12",
+      "type": "task",
+      "name": "Prompt 'PEC: Medical Advisor Review' SMS via the communications hub",
+      "lane": "CRaCA Assessor R",
+      "sequence": [
+        "step_13"
+      ]
+    },
+    {
+      "id": "step_13",
+      "type": "task",
+      "name": "Forward to Bupa Medical Advisor assessment",
+      "lane": "CRaCA Assessor R",
+      "sequence": [
+        "step_14"
+      ]
+    },
+    {
+      "id": "step_14",
+      "type": "task",
+      "name": "Review Medical Certificate",
+      "lane": "Bupa Medical Advisor R",
+      "sequence": [
+        "step_15"
+      ]
+    },
+    {
+      "id": "step_15",
+      "type": "gateway",
+      "name": "Decision?",
+      "lane": "Bupa Medical Advisor R",
+      "sequence": [
+        "step_17",
+        "step_19",
+        "step_22"
       ]
     },
     {
       "id": "step_16",
-      "type": "subprocess",
-      "subtype": "child_case",
-      "name": "Support handling of executive complaints",
-      "source_ref": "6.2.6.5",
-      "lane": "HI Customer Advocacy Co-ordinator",
+      "type": "task",
+      "name": "Add PEC Initial request note",
+      "lane": "CRaCA Assessor R",
       "sequence": [
-        "step_16a"
+        "step_27"
       ]
-    },
-    {
-      "id": "step_16a",
-      "type": "event",
-      "name": "End",
-      "source_ref": null,
-      "lane": "HI Customer Advocacy Co-ordinator",
-      "sequence": []
     },
     {
       "id": "step_17",
       "type": "task",
-      "name": "Advise the person appropriate to handle case",
-      "source_ref": null,
-      "lane": "HI Customer Complaints Support Manager",
+      "name": "Add Medical Certificate approved note",
+      "lane": "CRaCA Assessor R",
       "sequence": [
         "step_18"
       ]
@@ -210,28 +169,348 @@
     {
       "id": "step_18",
       "type": "task",
-      "name": "Acknowledge complaint received to executive /representative",
-      "source_ref": null,
-      "lane": "HI Customer Complaints Support Manager",
+      "name": "Add REST endorsement or hospital wavier",
+      "lane": "CRaCA Assessor R",
       "sequence": [
-        "step_19"
+        "step_25"
       ]
     },
     {
       "id": "step_19",
       "type": "task",
-      "name": "Assistant to contact customer and acknowledge receipt of complaint",
-      "source_ref": null,
-      "lane": "Customer",
+      "name": "Add PEC Pending more information required note",
+      "lane": "CRaCA Assessor R",
       "sequence": [
         "step_20"
       ]
     },
     {
       "id": "step_20",
+      "type": "task",
+      "name": "Prompt 'PEC: More Information Required' SMS via the communications hub",
+      "lane": "CRaCA Assessor R",
+      "sequence": [
+        "step_28"
+      ]
+    },
+    {
+      "id": "step_21",
+      "type": "task",
+      "name": "Prompt 'PEC: More Information Required' SMS via the communications hub",
+      "lane": "CRaCA Assessor R",
+      "sequence": [
+        "step_28"
+      ]
+    },
+    {
+      "id": "step_22",
+      "type": "task",
+      "name": "Add Deemed Pre-existing note",
+      "lane": "CRaCA Assessor R",
+      "sequence": [
+        "step_23"
+      ]
+    },
+    {
+      "id": "step_23",
+      "type": "task",
+      "name": "Prompt 'PEC: Outcome Delivered' SMS via the communications hub",
+      "lane": "CRaCA Assessor R",
+      "sequence": [
+        "step_28"
+      ]
+    },
+    {
+      "id": "step_24",
+      "type": "task",
+      "name": "Prompt 'PEC: Outcome Delivered' SMS via the communications hub",
+      "lane": "CRaCA Assessor R",
+      "sequence": [
+        "step_26"
+      ]
+    },
+    {
+      "id": "step_25",
+      "type": "task",
+      "name": "Prompt 'PEC: Outcome Delivered' SMS via the communications hub",
+      "lane": "CRaCA Assessor R",
+      "sequence": [
+        "step_26"
+      ]
+    },
+    {
+      "id": "step_26",
+      "type": "task",
+      "name": "Receive claim",
+      "lane": "CRaCA Assessor R",
+      "sequence": [
+        "step_28"
+      ]
+    },
+    {
+      "id": "step_27",
+      "type": "task",
+      "name": "Prompt 'PEC: More Information Required' SMS via the communications hub",
+      "lane": "CRaCA Assessor R",
+      "sequence": [
+        "step_28"
+      ]
+    },
+    {
+      "id": "step_28",
+      "type": "gateway",
+      "name": "Parallel merge gateway",
+      "lane": "CRaCA Assessor R",
+      "sequence": [
+        "step_29"
+      ]
+    },
+    {
+      "id": "step_29",
+      "type": "task",
+      "name": "Send relevant email template to customer",
+      "lane": "CRaCA Assessor R",
+      "sequence": [
+        "step_30"
+      ]
+    },
+    {
+      "id": "step_30",
+      "type": "gateway",
+      "name": "Hospital or Medical?",
+      "lane": "CRaCA Assessor R",
+      "sequence": [
+        "step_31",
+        "step_32"
+      ]
+    },
+    {
+      "id": "step_31",
       "type": "event",
       "name": "End",
-      "source_ref": null,
+      "lane": "CRaCA Assessor R",
+      "sequence": [
+        "step_33"
+      ]
+    },
+    {
+      "id": "step_32",
+      "type": "event",
+      "name": "End",
+      "lane": "CRaCA Assessor R",
+      "sequence": [
+        "step_33"
+      ]
+    },
+    {
+      "id": "step_33",
+      "type": "event",
+      "name": "Start",
+      "lane": "Customer",
+      "sequence": [
+        "step_34"
+      ]
+    },
+    {
+      "id": "step_34",
+      "type": "task",
+      "name": "Forward complaint received to Customer Relations mailbox",
+      "lane": "Customer",
+      "sequence": [
+        "step_35"
+      ]
+    },
+    {
+      "id": "step_35",
+      "type": "event",
+      "name": "Start",
+      "lane": "HI Customer Advocacy Co-ordinator",
+      "sequence": [
+        "step_36"
+      ]
+    },
+    {
+      "id": "step_36",
+      "type": "gateway",
+      "name": "Is this a health insurance related complaint?",
+      "lane": "HI Customer Advocacy Co-ordinator",
+      "sequence": [
+        "step_39",
+        "step_37"
+      ]
+    },
+    {
+      "id": "step_37",
+      "type": "task",
+      "name": "Forward to the relevent department",
+      "lane": "HI Customer Advocacy Co-ordinator",
+      "sequence": [
+        "step_38"
+      ]
+    },
+    {
+      "id": "step_38",
+      "type": "event",
+      "name": "End",
+      "lane": "HI Customer Advocacy Co-ordinator",
+      "sequence": []
+    },
+    {
+      "id": "step_39",
+      "type": "gateway",
+      "name": "Is there an existing case?",
+      "lane": "HI Customer Advocacy Co-ordinator",
+      "sequence": [
+        "step_40",
+        "step_41"
+      ]
+    },
+    {
+      "id": "step_40",
+      "type": "task",
+      "name": "Open existing case",
+      "lane": "HI Customer Advocacy Co-ordinator",
+      "sequence": [
+        "step_42"
+      ]
+    },
+    {
+      "id": "step_41",
+      "type": "task",
+      "name": "Open membership and create a new case",
+      "lane": "HI Customer Advocacy Co-ordinator",
+      "sequence": [
+        "step_42"
+      ]
+    },
+    {
+      "id": "step_42",
+      "type": "task",
+      "name": "Assess case and assign the appropriate severity and priority level",
+      "lane": "HI Customer Advocacy Co-ordinator",
+      "sequence": [
+        "step_43"
+      ]
+    },
+    {
+      "id": "step_43",
+      "type": "task",
+      "name": "Update system with complaint details",
+      "lane": "HI Customer Advocacy Co-ordinator",
+      "sequence": [
+        "step_44"
+      ]
+    },
+    {
+      "id": "step_44",
+      "type": "gateway",
+      "name": "Is this an executive complaint?",
+      "lane": "HI Customer Advocacy Co-ordinator",
+      "sequence": [
+        "step_45",
+        "step_46"
+      ]
+    },
+    {
+      "id": "step_45",
+      "type": "subprocess",
+      "name": "Manage health insurance escalated complaints",
+      "lane": "HI Customer Advocacy Co-ordinator",
+      "sequence": []
+    },
+    {
+      "id": "step_46",
+      "type": "gateway",
+      "name": "Has case been assigned?",
+      "lane": "HI Customer Advocacy Co-ordinator",
+      "sequence": [
+        "step_47",
+        "step_48"
+      ]
+    },
+    {
+      "id": "step_47",
+      "type": "task",
+      "name": "Advise the assigned specialist that this has now been escalated to senior customer relations specialist",
+      "lane": "HI Customer Advocacy Co-ordinator",
+      "sequence": [
+        "step_49"
+      ]
+    },
+    {
+      "id": "step_48",
+      "type": "task",
+      "name": "Contact complaints leadership to determine who to assign case to",
+      "lane": "HI Customer Advocacy Co-ordinator",
+      "sequence": [
+        "step_50"
+      ]
+    },
+    {
+      "id": "step_49",
+      "type": "gateway",
+      "name": "Parallel join",
+      "lane": "HI Customer Advocacy Co-ordinator",
+      "sequence": [
+        "step_51"
+      ]
+    },
+    {
+      "id": "step_50",
+      "type": "task",
+      "name": "Advise the person appropriate to handle case",
+      "lane": "HI Customer Complaints Support Manager",
+      "sequence": [
+        "step_53"
+      ]
+    },
+    {
+      "id": "step_51",
+      "type": "subprocess",
+      "name": "Support handling of executive complaints",
+      "lane": "HI Customer Advocacy Co-ordinator",
+      "sequence": [
+        "step_52"
+      ]
+    },
+    {
+      "id": "step_52",
+      "type": "event",
+      "name": "End",
+      "lane": "HI Customer Advocacy Co-ordinator",
+      "sequence": []
+    },
+    {
+      "id": "step_53",
+      "type": "event",
+      "name": "Acknowledge complaint received to executive/representative",
+      "lane": "HI Customer Complaints Support Manager",
+      "sequence": [
+        "step_54"
+      ]
+    },
+    {
+      "id": "step_54",
+      "type": "task",
+      "name": "Acknowledge complaint received to executive /representative",
+      "lane": "HI Customer Complaints Support Manager",
+      "sequence": [
+        "step_55"
+      ]
+    },
+    {
+      "id": "step_55",
+      "type": "task",
+      "name": "Assistant to contact customer and acknowledge receipt of complaint",
+      "lane": "Customer",
+      "sequence": [
+        "step_56"
+      ]
+    },
+    {
+      "id": "step_56",
+      "type": "event",
+      "name": "End",
       "lane": "Customer",
       "sequence": []
     }
@@ -244,13 +523,18 @@
     "Risk 1013751 - Complaint handling standards"
   ],
   "integrations": [
+    "Cyclops",
+    "BOSS",
+    "HOOV",
+    "MPMN",
+    "MSCI",
     "Microsoft Outlook",
     "Apollo"
   ],
   "decisions": [
     {
-      "id": "step_4",
-      "question": "Is this a health insurance related complaint?",
+      "id": "step_3",
+      "question": "Does this need to be escalated to Customer Relations?",
       "outcomes": [
         "Yes",
         "No"
@@ -258,7 +542,23 @@
     },
     {
       "id": "step_6",
-      "question": "Is there an existing case?",
+      "question": "Has customer provided Medical Certificate?",
+      "outcomes": [
+        "Yes",
+        "No"
+      ]
+    },
+    {
+      "id": "step_8",
+      "question": "Can PEC be approved?",
+      "outcomes": [
+        "Yes",
+        "No"
+      ]
+    },
+    {
+      "id": "step_9",
+      "question": "Can claim be approved for PEC without a medical certificate?",
       "outcomes": [
         "Yes",
         "No"
@@ -266,14 +566,62 @@
     },
     {
       "id": "step_11",
-      "question": "Is this an executive complaint?",
+      "question": "Is more information required?-1",
       "outcomes": [
-        "Yes (Board Members, ELT, CEO)",
+        "Yes",
         "No"
       ]
     },
     {
-      "id": "step_13",
+      "id": "step_15",
+      "question": "Decision?",
+      "outcomes": [
+        "Approved",
+        "More information",
+        "Denied"
+      ]
+    },
+    {
+      "id": "step_28",
+      "question": "Parallel merge gateway",
+      "outcomes": [
+        "Continue"
+      ]
+    },
+    {
+      "id": "step_30",
+      "question": "Hospital or Medical?",
+      "outcomes": [
+        "Hospital",
+        "Medical"
+      ]
+    },
+    {
+      "id": "step_36",
+      "question": "Is this a health insurance related complaint?",
+      "outcomes": [
+        "Yes",
+        "No"
+      ]
+    },
+    {
+      "id": "step_39",
+      "question": "Is there an existing case?",
+      "outcomes": [
+        "Yes",
+        "No"
+      ]
+    },
+    {
+      "id": "step_44",
+      "question": "Is this an executive complaint?",
+      "outcomes": [
+        "No",
+        "Yes (Board Members, ELT, CEO)"
+      ]
+    },
+    {
+      "id": "step_46",
       "question": "Has case been assigned?",
       "outcomes": [
         "Yes",
